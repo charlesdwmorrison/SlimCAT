@@ -25,7 +25,11 @@ Advancements over vernerable tools such as [Netling](https://github.com/hallator
 
 ## Usage
 ### Scripts (User Flows)
-Scripts consist of a collections of requests. E.g., List<Req>. 
+Scripts consist of a collections of requests. E.g., 
+
+```
+List<Req>
+```
 
 Scripts in SlimCAT are classes with one method, BuildRequest(). BuildRequest() returns a list of the requests you want to execute.  
 The following example should look somewhat familiar if you have done any LoadRunner scripting:
