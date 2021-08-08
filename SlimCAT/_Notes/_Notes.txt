@@ -1,0 +1,16 @@
+﻿
+The solution uses NON concurrent collections whereever possible. This is because a well-structured solution does not need it.
+this is particularly true when it comes to 
+
+
+
+
+I think it will always finish the script 
+
+
+
+No constant load pattern because I don't believe in them 
+
+
+URI -- can be multiple of these per script, but they are limited. These are NOT requests.
+Request - request is what SendRequest sends, the count of these can be infinite and go up in to hundreds or thousands (where as URIs are limited to 1 -maybe 25 for a long flow.)
