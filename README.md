@@ -157,3 +157,7 @@ The SendRequest() class currently consists of a RestSharp client which sends the
 ## Suggestions/FAQ
 - Leverage Application Insights, AppDynamics, Splunk or other monitoring tool to visualize the load test.
 - If you do that, you do not need a GUI. A SignlR GUI is provided for cases when a monitoring tool is not available. 
+
+
+![SlimCAT SignalR Chart.js](https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT.jpg?raw=true)
+Illustration 112514351 © Martin Malchev | Dreamstime.com
