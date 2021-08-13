@@ -1,15 +1,17 @@
-﻿# L6 - A DevOps CI/CD Performance Test Tool
+﻿# SlimCAT - A DevOps CI/CD Performance Test Tool
 
-- L6 is a C# (.Net 5.0 /.Net Core) load tool developed for use in CI/CD pipelines; it can also be used as a standalone desktop tool.
-- L6 launches multiple threads, but as easily as any functional, MSTest or NUnit test. 
-- L6 uses NUnit to assert against response time metrics; pipelines can then make decsions based on this pass/fail result. 
-- L6 has a simple design. If you can write some C# code, you can follow the examples and load test your own applications.
-- L6 follows principles of well-known load tools, with scripts, correlations, and data sources.
+- SlimCAT is a C# (.Net 5.0 /.Net Core) load tool developed for use in CI/CD pipelines; it can also be used as a standalone desktop tool.
+- SlimCAT launches multiple threads, but as easily as any functional, MSTest or NUnit test. 
+- SlimCAT uses NUnit to assert against response time metrics; pipelines can then make decsions based on this pass/fail result. 
+- SlimCAT has a simple design. If you can write some C# code, you can follow the examples and load test your own applications.
+- SlimCAT follows principles of well-known load tools, with scripts, correlations, and data sources.
 - Tests can be as short as 10-13 seconds (ideal for pipeline use), or as long as several hours. 
+
+![alt text](https://github.com/charlesdwmorrison/SlimCAT/blob/master/2021_08_10_EnsetaLoadTest_09.png?raw=true)
 
 ## Features/Components   
 Advancements over vernerable tools such as [Netling](https://github.com/hallatore/Netling) and K6 include:
-- .Net 5.0 (.Net Core). L6 can be executed on Linux or a Mac.
+- .Net 5.0 (.Net Core). SlimCAT can be executed on Linux or a Mac.
 - Correlation so that you can add data and vary the body or URI.
 - Ability to test more than one URL or endpoint per test test. 
 - Test user scenarios,not just one URI; just like LoadRunner or Visual Studio load tests.   
@@ -25,9 +27,13 @@ Advancements over vernerable tools such as [Netling](https://github.com/hallator
 
 ## Usage
 ### Scripts (User Flows)
-Scripts consist of a collections of requests. E.g., List<Req>. 
+Scripts consist of a collections of requests. E.g., 
 
-Scripts in L6 are classes with one method, BuildRequest(). BuildRequest() returns a list of the requests you want to execute.  
+```
+List<Req>
+```
+
+Scripts in SlimCAT are classes with one method, BuildRequest(). BuildRequest() returns a list of the requests you want to execute.  
 The following example should look somewhat familiar if you have done any LoadRunner scripting:
 
 ```
@@ -129,7 +135,7 @@ public async Task S02_OnlineRest_3_Users()
 }
 ```
 
-As you can see from the above, L6 also has a PerfMetrics class which performs calculations on the results and which you can assert against to determine if the test passed or failed.
+As you can see from the above, SlimCAT also has a PerfMetrics class which performs calculations on the results and which you can assert against to determine if the test passed or failed.
 
 The SendRequest() class currently consists of a RestSharp client which sends the requests. The class also performs the correlations defined in the script, and starts and stops a timer measuring response time.
 
