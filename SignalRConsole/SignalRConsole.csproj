@@ -9,7 +9,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="appSettings.json" />
+    <None Include="appSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

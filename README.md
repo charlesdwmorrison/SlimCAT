@@ -25,6 +25,11 @@ Advancements over vernerable tools such as [Netling](https://github.com/hallator
 - Open Source and easily customizable.
 - Use standard DevOps functional test agent machines instead of dedicated load generators.
 
+
+SlimCAT takes its name from the old Microsoft [WCAT - Web Capacity Analysis Tool](https://docs.microsoft.com/en-us/previous-versions/ms951774)
+which [Fiddler can still export](http://www.tiernok.com/posts/implementing-wcat-for-load-testing.html), [and also here](https://blogs.iis.net/thomad/using-the-wcat-fiddler-extension-for-web-server-performance-tests)
+
+
 ## Usage
 ### Scripts (User Flows)
 Scripts consist of a collections of requests. E.g., 
