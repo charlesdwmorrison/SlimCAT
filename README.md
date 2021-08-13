@@ -7,7 +7,7 @@
 - SlimCAT follows principles of well-known load tools, with scripts, correlations, and data sources.
 - Tests can be as short as 10-13 seconds (ideal for pipeline use), or as long as several hours. 
 
-![alt text](https://github.com/charlesdwmorrison/SlimCAT/blob/master/2021_08_10_EnsetaLoadTest_09.png?raw=true)
+![SlimCAT SignalR Chart.js](https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT.png?raw=true)
 
 ## Features/Components   
 Advancements over vernerable tools such as [Netling](https://github.com/hallatore/Netling) and K6 include:
