@@ -31,7 +31,7 @@ namespace SlimCAT
             // For each correlated value we must register the key name for that value.
             // This dictionary is inherted from class "Script". 
             // ToDo: This is not completely kosher that we build the dictionary in the constructor.
-            correlationsDict.Add("empId", "Corrolated Value Not Initialized");
+            correlationsDict.Add("empId", "Correlated Value Not Initialized");
             scriptName = GetType().Name;
         }
 
@@ -55,7 +55,7 @@ namespace SlimCAT
                     // 2. left and right boundary basic format: (?<=  <left str>    )(.*?)(?=  < rt string> )
                     // 3. Use https://onlinestringtools.com/escape-string to escape what you build in Rubular. 
                     // Loooking for: [{"id":1,"employee_name":"Tiger              
-                    regExPattern = "(?<={\"id\":\")(.*?)(?=\",\"employee_name)"
+                    regExPattern = "(?<={\"id\":)(.*?)(?=,\"employee_name)"
                 },
                 new Req()
                 {
@@ -64,7 +64,8 @@ namespace SlimCAT
                     //uri = urlPrefix + "/employee/1", // original
                     useExtractedText = true, // instructs SendRequest() to use a correlated value
                     nameForCorrelatedVariable = "empId",
-                    uri = urlPrefix + "/employee/" + correlationsDict["empId"]
+                    uri = urlPrefix + "/employee/" + correlationsDict["empId"],
+                    reqNameForChart = "employee"
                 },
                 new Req
                 {

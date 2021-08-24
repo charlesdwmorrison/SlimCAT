@@ -7,6 +7,7 @@ namespace SlimCAT
     public class Req
     {
         public string uri;
+        public string reqNameForChart; // normally, the chart will use the uri as the plot point. But in some cases we need to override the name for Chart.js (e.g., in the case of REST requests with changing data in the uri.)
         public string body;
         public Method method;
         public DateTime reqStartTime;

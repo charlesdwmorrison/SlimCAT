@@ -56,7 +56,7 @@ namespace SlimCAT.Models
                 var path8 = uri.GetLeftPart(UriPartial.Scheme);
                 var path9 = uri.AbsolutePath;
                 var path10 = uri.LocalPath; // These last two might be the answer
-                // what we are looking for is is the REST method call.
+                // what we are looking for is the REST method call.
                 // it should be:
                 // 1. get the host name
                 // 2. Eliminate the host name

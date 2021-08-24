@@ -132,7 +132,7 @@ namespace SlimCAT
             if (req.useExtractedText == true)
             {
                 string keyName = req.nameForCorrelatedVariable;
-                req.uri = req.uri.Replace("Corrolated Value Not Initialized", script.correlationsDict[keyName]);
+                req.uri = req.uri.Replace("Correlated Value Not Initialized", script.correlationsDict[keyName]);
             }
 
             Response response = new Response();

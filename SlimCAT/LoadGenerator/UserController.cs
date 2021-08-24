@@ -65,8 +65,8 @@ namespace SlimCAT
         ///     1. When it has reached a certain duration.
         ///     2. When it has completed a certain number of total passes over the script (iterations).
         ///  A thread (or task) will continue to process the script requests until one of these two conditions is met.
-        ///  We start one task per user. This task *synchronously* (request by request - it waits for each request to complete) processes the script requests.
-        ///  The default is "ByDuration."
+        ///  We start one task per user. This task *synchronous*; it sends one request at a time and it waits for each request to complete.
+        ///  The default stop approach is "ByDuration."
         /// </summary>
         /// <returns>A Task</returns>
         private void LaunchClientAndHandleStop(Script script, int clientId, long testDurationSecs = 360, string testType = "ByDuration") //alt "ByTestIterations"
