@@ -5,17 +5,23 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 </head>
 <body>
-    <script><!--    https://www.10bestdesign.com/dirtymarkup/js/ -->
 
+    <!-- <h1>SlimCAT - Response Time & Throughput</h1> -->
+
+    <script>
+<!--    https://www.10bestdesign.com/dirtymarkup/js/ -->
+
+        var debugPointId = 0;
+        var debugPointPosition = 0;
 
         window.onload = function () {
-            MakeChartsJsChart();
+            MakeChartJsChart();
         };
 
-<!-- SignalR Code--------------------------------------------------------- -->
-<!-- Connect to server hub: eventHub, transport type default would be: websocket -->
-<!-- Websocket transport allows us to skip negotiation. -- >
-<!--  https://www.jerriepelser.com/blog/automatic-reconnects-signalr/ -->
+<!--SignalR Code--------------------------------------------------------- -->
+<!--Connect to server hub: eventHub, transport type default would be: websocket-- >
+<!--Websocket transport allows us to skip negotiation. -- >
+<!--https://www.jerriepelser.com/blog/automatic-reconnects-signalr/ -->
         const connection = new signalR.HubConnectionBuilder()
             .configureLogging(signalR.LogLevel.Debug)
             .withAutomaticReconnect([0, 1000, 5000, null])
@@ -26,12 +32,12 @@
 
 
 
-<!-- Hooks callback for listening message from server side ->
-<!-- Note that you can have multiple of these "connction.on" methods, one for each function.>
-<!-- Note that the name must exactly same as the function declare on server side-- >
-            connection.on(" sJsChart", () => {
-                console.log('Made it to connection on makechartsjschart');
-                MakeChartsJsChart();
+<!--Hooks callback for listening message from server side ->
+<!--Note that you can have multiple of these "connection.on" methods, one for each function.>
+<!--Note that the name must exactly same as the function declare on server side-- >
+    connection.on("MakeChartJsChart", () => {
+                console.log('Made it to connection on MakeChartJsChart');
+                MakeChartJsChart();
             });
         connection.on("AddData", (datasetId, currDataPointForDS, responseTime) => {
             console.log('Made it to connection on AddData');
@@ -51,7 +57,7 @@
 
 
 
-<!-- Start of Chart.js definition----------------------------------------------------->
+<!--Start of Chart.js definition----------------------------------------------------->
 //var currentDataPoint = 0;
 var perfMetricsChart;
         Chart.defaults.global.legend.labels.usePointStyle = true;
@@ -59,13 +65,27 @@ var perfMetricsChart;
         var lineDataArray = {};
         var datasets = [{}];
 
-        // https://stackoverflow.com/questions/51686993/auto-remove-old-datapoints-in-chart-js/51687297#51687297
-        // https://www.chartjs.org/docs/latest/charts/line.html#line-styling
-        <!-- This fuction is called on window.load()-- >
-            function MakeChartsJsChart() {
+
+                    // https://stackoverflow.com/questions/51686993/auto-remove-old-datapoints-in-chart-js/51687297#51687297
+                    // https://www.chartjs.org/docs/latest/charts/line.html#line-styling
+                    <!--This fuction is called on window.load()-- >
+            function MakeChartJsChart() {
                 console.log('Executing MakeChartJsChart function.');
 
+
+                <!--get a refernce to the chart and then clear the data -->
                 var canvas = document.getElementById('perfMetricsChart');
+                lineDataArray = {};
+                datasets = [{}];
+
+             
+                
+              
+
+                if (perfMetricsChart != null) {
+                    removeData(perfMetricsChart);
+                    perfMetricsChart.destroy();
+                }
 
                 perfMetricsChart = Chart.Line(canvas, {
                     data: lineDataArray,
@@ -77,13 +97,23 @@ var perfMetricsChart;
             }
 
 
+
+        function removeData(chart) {
+            console.log('Executing removeData function.');
+            chart.data.labels.pop();
+            chart.data.datasets.forEach((dataset) => {
+                dataset.data.pop();
+            });
+            chart.update();
+        }
+
             // add new datasets. This creates a blank dataset. It does not add any data. It does not show a line yet.
             // ToDo: the third parameter seems to be not used.
             // https://stackoverflow.com/questions/41805180/add-dynamic-dataset-to-chart-js
             // https://stackoverflow.com/questions/31059399/how-to-push-datasets-dynamically-for-chart-js-bar-chart
             // https://stackoverflow.com/questions/43173081/chart-js-styling-legend
-            <!-- We construct the rgbaStr in C# code and pass the entire thing in.It looks like this: "rgba(0,0,255,1)" -- >
-            <!-- new lines created here will start at index 1, not zero. -- >
+            <!--We construct the rgbaStr in C# code and pass the entire thing in.It looks like this: "rgba(0,0,255,1)" -- >
+                        <!--new lines created here will start at index 1, not zero. -- >
             function InitializeChartLine(axisLabel, rgbaStr, lineId) {
                 var newDataset = {
                     label: axisLabel,
@@ -93,7 +123,7 @@ var perfMetricsChart;
                     borderWidth: 1,
                     borderColor: rgbaStr
                 };
-                console.log('Total datasets=' + perfMetricsChart.data.datasets.length);
+                console.log('Total items in dataset=' + perfMetricsChart.data.datasets.length);
                 perfMetricsChart.data.datasets.push(newDataset);
                 perfMetricsChart.update();
             };
@@ -110,6 +140,9 @@ var perfMetricsChart;
             perfMetricsChart.data.labels[currDataPointForDS] = curTime;
             perfMetricsChart.update();
 
+            debugPointId = getRandomArbitrary(0, 5);
+            debugPointPosition = debugPointPosition + 1;
+
         };
 
 
@@ -124,30 +157,39 @@ var perfMetricsChart;
             s = s < 10 ? '0' + s : s;
             var ms = time.getUTCMilliseconds();
             return m + ':' + s;
-        }</script>
+        }
 
-    <h1>SlimCAT - Response Time & Throughput</h1>
+
+        function getRandomArbitrary(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+    </script>
 
     <div style="height: 300px; width: 700px; background: #ffffff;">
         <canvas id="perfMetricsChart"></canvas>
     </div>
 
+
+
+   
     <p>
         <br>
     <p>
         Call SignalR on Hub
         <br />
-        <input type="button" value="Make Chart SignalR" onclick="connection.invoke('MakeChartsJsChart')" />
+        <input type="button" value="Make Chart SignalR" onclick="connection.invoke('MakeChartJsChart')" />
         <input type="button" value="Add Data SignalR" onclick="connection.invoke('AddData')" />
     </p>
     <p></p>
     <p>
         Debug: Execute JS Functions without SignalR
         <br />
-        <input type="button" value="Make Chart (local)" onclick="MakeChartsJsChart()" />
         <input type="button" value="Add another line(local)" onclick="InitializeChartLine('TestLine','rgba(0,255,0,1)', 0)" />
-        <input type="button" value="Add Data to line(local)" onclick="AddData(1,8)" />
+        <input type="button" value="Add Data to line(local)" onclick="AddData(0,debugPointPosition,debugPointId)" />
 
     </p>
+       
+
 </body>
 </html>

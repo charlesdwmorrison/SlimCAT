@@ -14,3 +14,118 @@ No constant load pattern because I don't believe in them
 
 URI -- can be multiple of these per script, but they are limited. These are NOT requests.
 Request - request is what SendRequest sends, the count of these can be infinite and go up in to hundreds or thousands (where as URIs are limited to 1 -maybe 25 for a long flow.)
+
+
+let either restSharp or httpMessageREquest handle the URL and body stuff.
+SlimCatAdds:
+- charting
+- logging of response time, throughput
+- correlation
+
+
+Scripts
+=======
+The constructor of a script calls it's build request method.
+
+
+
+
+Tools to Create Code (none of these will convert XML to C# objects)
+
+1. FiddlerToCode (makes webrequests, most established) - https://www.chadsowald.com/software/fiddler-extension-request-to-code
+
+2. HTTPClientCode (makes httpClient code but only one request at a a time) - https://github.com/nicogis/HttpClientCode
+
+3. PostMan - Makes RestSharp code. However Postman will only capture from a browser
+
+
+There are some tools to convert XML to objects.  These include:
+
+Visual Studio - will convert XML and JSON to C# objects
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Postman RestSharp Example
+var client = new RestClient("https://www.testarossa.com/visit/los-gatos/");
+client.Timeout = -1;
+var request = new RestRequest(Method.GET);
+request.AddHeader("sec-ch-ua", "\"Chromium\";v=\"92\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"92\"");
+request.AddHeader("sec-ch-ua-mobile", "?0");
+request.AddHeader("Upgrade-Insecure-Requests", "1");
+client.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36";
+request.AddHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
+IRestResponse response = client.Execute(request);
+Console.WriteLine(response.Content);
+
+
+
+
+
+A SlimCat request encapsulates eiher a RestSharp request or an HTTPRequestMessage request.
+It just adds a little extra metadata to these requests:
+1. Correllation paramters 
+
+
+
+
+
+Cloning
+============
+The memory stream clone approach I am using is working but here are some other approaches.
+ A deep copy is something that copies EVERY field of an object.A shallow copy will only create a new object and point all the fields to the original. – 
+ A deep copy creates a second instance of the object with the same values.A shallow copy(oversimplified) is like creating a second reference to an object. – 
+
+            // https://stackoverflow.com/questions/6569486/creating-a-copy-of-an-object-in-c-sharp
+            // Nuget package to clone
+            // https://stackoverflow.com/questions/78536/deep-cloning-objects/56933017#56933017
+            // http://automapper.org/
+            // https://github.com/marcelltoth/ObjectCloner
+            // https://github.com/replaysMike/AnyClone  
+            // https://github.com/maurosampietro/UltraMapper
+            
+        // https://stackoverflow.com/questions/78536/deep-cloning-objects/56933017#56933017
+        //private static MyObj DeepCopy(MyObj source)
+        //{
+
+        //    var DeserializeSettings = new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace };
+
+        //    return JsonConvert.DeserializeObject<MyObj>(JsonConvert.SerializeObject(source), DeserializeSettings);
+
+        //}
+
+HTTPClient HTTPRequestMessage Reuse
+=======================================
+
+         // Can't reuse HTTPRequestMessage requests!
+            // https://stackoverflow.com/questions/18000583/re-send-httprequestmessage-exception
+            //ResetSendStatus(slimCatReq.httpReqMsg);
+            // another way to do this might be to clone the message
+            // https://stackoverflow.com/questions/18000583/re-send-httprequestmessage-exception/43512592
+
+
+
+
+
+
+
+
+ // Is the script a template or an object? That's the question.
+        // each thread must have it's own correlation dictionary.
+        // Otherwise the threads modified this dictionary. E.g. one thread's session state modifies another's. 
+        // The dictionary must be *per thread*.
+        // maybe make the correlation an object?
+        // Or it could be a concurrent dictionary
+        // If per thread, the dictionary must be passed around with the thread . . . 

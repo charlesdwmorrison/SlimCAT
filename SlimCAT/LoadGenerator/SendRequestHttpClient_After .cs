@@ -1,0 +1,160 @@
+﻿using SlimCAT.Models;
+using System;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Threading;
+
+namespace SlimCAT
+{
+    public partial class SendHttpClientRequest
+    {
+
+        private static long testCompletions = 0;
+
+        /// <summary>
+        /// Takes care of correlation.
+        /// </summary>
+        /// <param name="scriptInstance"></param>
+        /// <param name="slimCatReq"></param>
+        /// <param name="slimCatResponse"></param>
+        public void AfterRequestActions(Tuple<Script, SlimCatReq, SlimCatResponse> slimCatResponseInfo)
+        {            
+            Script scriptInstance = slimCatResponseInfo.Item1;
+            SlimCatReq slimCatReq = slimCatResponseInfo.Item2;
+            SlimCatResponse slimCatResponse = slimCatResponseInfo.Item3;
+
+            int chartScalingFactor_TestThroughput = Convert.ToInt32(Extensions.GetConfiguration("chartScalingFactor_TestThroughput"));
+            bool logFullReqAndReponse = Convert.ToBoolean(Extensions.GetConfiguration("logFullReqAndReponse")); 
+            if (logFullReqAndReponse == true)
+            {
+                var fullResponse = slimCatResponse.httpResponseMessage.Content.ReadAsStringAsync().Result;
+                using (StreamWriter sw = new StreamWriter(@"C:\log\" + "FullResponseLog.log", true))
+                {
+                    sw.WriteLine(fullResponse);
+                    sw.Flush();
+                    sw.Close();
+                }
+            }
+
+            // correlatiion: grab values from response to use in next request in the script
+            if (slimCatReq.extractText_FromResponseBody == true)
+            {
+                ExtractText(slimCatReq, scriptInstance, slimCatResponse.responseBody);
+            }
+
+            slimCatResponse.responseExceptionMessage = slimCatResponse.httpResponseMessage.ReasonPhrase;
+            slimCatResponse.responseStatsCode = slimCatResponse.httpResponseMessage.StatusCode.ToString();
+            slimCatResponse.responseBody = slimCatResponse.httpResponseMessage.Content.ReadAsStringAsync().Result;
+
+            slimCatResponse.reqUri = slimCatReq.uri;
+            slimCatResponse.reqBody = slimCatReq.body;
+            // response.reqVerb = req.method;
+            // response.reqDescription = req.body;
+            // response.requestTimeSent = req.body;
+            // response.reqUriParams = req.body;
+            slimCatResponse.responseTtlb = stopwatch.ElapsedMilliseconds;
+            slimCatResponse.clientId = _clientId;
+            slimCatResponse.responseId = responseIdForConcurrentDict;
+            slimCatResponse.responseTimeReceived = DateTime.Now;
+            slimCatResponse.responseStatus = "Finished";
+            slimCatResponse.responseIdForCurrentClient = responseIdForCurrentClient++;
+
+            ResponseDb.conCurResponseDict.TryAdd(Interlocked.Increment(ref responseIdForConcurrentDict), slimCatResponse);
+
+            // calculate response time of request
+            double responseTimeInSec = slimCatResponse.responseTtlb / 1000.0;
+
+            TimeSpan duration = DateTime.Now - testStartTime;
+            double reqPerSec = Interlocked.Increment(ref responseIdForLog) / duration.TotalSeconds;
+
+            // Here is what we need to put a point on a line:
+            // 1. Which line does this data belong to? 
+            // 2. What position along that line?
+            // 3. What is the value to put on that line? (TTLB)
+            // Here we plot the response time or throughput data and then increment the pointer in the dictionary
+            sgnlR.AddData(slimCatReq.uriIdx, ChartData.countPerUriDict[slimCatReq.uriIdx], responseTimeInSec);
+            ChartData.countPerUriDict[slimCatReq.uriIdx] += 1;
+
+            // caclulate TEST throughput (not request throughput!)
+            double testThroughPut = 0;
+            if (Interlocked.Read(ref testCompletions) > 3)
+            {
+                //// 10/14/21 - this is still not right. This is response-based, not test iteration based.
+                //// need the timestamp of each test completion to do this right.
+                //// test completion timestamp needs to be stored in conCurResponseDict
+                //// we can get the time embeded in the request
+                //// the idea here is to wait until we have a few requests.
+
+                //var valuesLst = ResponseDb.conCurResponseDict.Values.Where(x => x.testCompletionTime > testStartTime).ToList();
+                //var completionTimeXIterationsAgo = valuesLst[(int)testCompletions -3].testCompletionTime;
+
+                //TimeSpan aDuration = DateTime.Now - completionTimeXIterationsAgo;
+                //testThroughPut = 3 / aDuration.TotalSeconds;
+
+                // same as below
+                TimeSpan testDuration = DateTime.Now - testStartTime;
+                testThroughPut = (Interlocked.Read(ref testCompletions) / testDuration.TotalSeconds);
+
+            }
+            else
+            {
+                TimeSpan testDuration = DateTime.Now - testStartTime;
+                testThroughPut = (Interlocked.Read(ref testCompletions) / testDuration.TotalSeconds);
+            }
+
+            // add tp to chart only on first request (1 per test iteration).
+            if (slimCatReq.uriIdx == scriptInstance.slimCatRequestList.Count - 1)
+            {
+                Interlocked.Increment(ref testCompletions);
+                ResponseDb.conCurResponseDict[responseIdForConcurrentDict].testCompletionTime = DateTime.Now;
+                sgnlR.AddData(ChartData.testThroughputIdx, ChartData.countPerUriDict[ChartData.testThroughputIdx], testThroughPut * chartScalingFactor_TestThroughput);
+                ChartData.countPerUriDict[ChartData.testThroughputIdx] += 1;
+            }
+      
+
+            if (responseIdForLog % 25 == 0 || responseIdForLog == 1)
+            {
+                writer.WriteToLog(" #Resps \tThrdRespId \tThrds \tTTLB \tTest/sec \tRPS \tVerb \tCode \tTransName \t\t\tURI");
+                writer.WriteToLog(" ====== \t========== \t===== \t==== \t======== \t=== \t==== \t==== \t========= \t\t\t===");
+            }
+          
+            try
+            {
+                writer.WriteToLog(" " + responseIdForLog
+                 // + "\t\t" + slimCatReq.taskOrThreadId
+                  + "\t\t" + slimCatResponse.responseIdForCurrentClient
+                  // + "\t" + numHttpClients
+                  + "\t\t" + UserController.curNumThreads
+                  + "\t" + slimCatResponse.responseTtlb
+                  + "\t\t" + Math.Round(testThroughPut, 2)
+                  + "\t" + Math.Round(reqPerSec, 2)
+                  + "\t" + slimCatReq.httpClientMethod
+                  + "\t" + slimCatResponse.responseStatsCode
+                  + "\t" + slimCatReq.reqNameForChart
+                  + "\t\t\t" + slimCatReq.httpReqMsg.RequestUri
+                  // + "\t" + slimCatResponse.responseBody.Substring(0, 100)
+
+            );
+            }
+            catch (Exception ex)
+            {
+                string theMsge = ex.Message;
+            }
+
+            // 10/25/21 -- I think we can delete this. 
+            //if (slimCatReq.extractFromResponseText == true)
+            //{
+          
+
+            //    Regex regEx = new Regex(slimCatReq.regExPattern);
+            //    string extractedValue = regEx.Match(slimCatResponse.responseBody).Value;
+
+            //    // place value into the correlation dictionary
+            //    scriptInstance.correlationsDict[slimCatReq.nameForCorrelatedVariable] = extractedValue;
+            //}
+
+        }
+
+    }
+
+}

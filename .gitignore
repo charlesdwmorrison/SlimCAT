@@ -3,3 +3,10 @@
 ################################################################################
 
 /SlimCAT/bin/Debug/net5.0
+/.vs/SlimCAT
+/SlimCAT_UnitTests/bin/Debug/net5.0
+/SlimCAT_UnitTests/obj
+/y_08_13_2021_BackupOfConsoleVersion
+/SlimCAT/obj
+/SignalRConsole/bin/Debug/net5.0
+/SignalRConsole/obj

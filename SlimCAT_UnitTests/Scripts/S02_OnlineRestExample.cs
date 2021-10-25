@@ -21,33 +21,44 @@ namespace SlimCAT
             https://jsonplaceholder.typicode.com/
             https://documenter.getpostman.com/view/2062352/Szmb5eXv
         // Need Some asp.net
+
+        Public Soap API
+        https://documenter.getpostman.com/view/8854915/Szf26WHn
+
+        to find more search for "public  ___ API"
          */
 
 
         public S02_OnlineRestExampleScript()
         {
-            // Usage Notes:
+            // Correlation Usage Notes:
             // Register correlations by adding another element to this dictionary.
             // For each correlated value we must register the key name for that value.
             // This dictionary is inherted from class "Script". 
             // ToDo: This is not completely kosher that we build the dictionary in the constructor.
             correlationsDict.Add("empId", "Correlated Value Not Initialized");
             scriptName = GetType().Name;
+
+            // Headers
+            header01 = new Dictionary<string, string>{{ "Content-Type", "text/xml; charset=utf-8" }};
+
+
         }
 
 
         /// <summary>
+        /// Think of this as a "template".
         /// </summary>
         /// <returns></returns>
-        public List<SlimCAT.Req> BuildRequestList()
+        public List<SlimCAT.SlimCatReq> BuildRequestList()
         {
-            requestList = new List<Req>()
+            slimCatRequestList = new List<SlimCatReq>()
               {
-                new Req()
+                new SlimCatReq()
                 {
                     uri = urlPrefix + "/employees",
-                    method = Method.GET,
-                    extractText = true,
+                    restSharpMethod = Method.GET,
+                    extractText_FromResponseBody = true,
                     nameForCorrelatedVariable = "empId",
 
                     // Correlation Tips:
@@ -57,36 +68,36 @@ namespace SlimCAT
                     // Loooking for: [{"id":1,"employee_name":"Tiger              
                     regExPattern = "(?<={\"id\":)(.*?)(?=,\"employee_name)"
                 },
-                new Req()
+                new SlimCatReq()
                 {
-                    method = Method.GET,
+                    restSharpMethod = Method.GET,
                     // Example of using correlated value from above
                     //uri = urlPrefix + "/employee/1", // original
-                    useExtractedText = true, // instructs SendRequest() to use a correlated value
+                    useExtractedUriText = true, // instructs SendRequest() to use a correlated value
                     nameForCorrelatedVariable = "empId",
                     uri = urlPrefix + "/employee/" + correlationsDict["empId"],
                     reqNameForChart = "employee"
                 },
-                new Req
+                new SlimCatReq
                 {
                     uri = urlPrefix + "/create",
-                    method = Method.POST,
+                    restSharpMethod = Method.POST,
                     body = "{\"name\":\"test\",\"salary\":\"123\",\"age\":\"23\"}"
                 },
-                 new Req
+                 new SlimCatReq
                 {
                     uri = urlPrefix + "/update/1",
-                    method = Method.PUT,
+                    restSharpMethod = Method.PUT,
                     body = "{\"name\":\"test\",\"salary\":\"123\",\"age\":\"23\"}"
                 },
-                new Req
+                new SlimCatReq
                 {
                     uri = urlPrefix + "/delete/2",
-                    method = Method.DELETE,
+                    restSharpMethod = Method.DELETE,
                 }
             };
 
-            return requestList;
+            return slimCatRequestList;
         }
     }
 }

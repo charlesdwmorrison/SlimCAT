@@ -2,6 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <Authors>Charles Morrison</Authors>
+    <Company>Essential Computing</Company>
+    <PackageProjectUrl>https://github.com/charlesdwmorrison/SlimCAT</PackageProjectUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageTags>SignalR, Chartjs</PackageTags>
+    <RepositoryUrl>https://github.com/charlesdwmorrison/SlimCAT</RepositoryUrl>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>

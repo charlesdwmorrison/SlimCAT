@@ -1,9 +1,9 @@
 ﻿using System;
-
+using System.Net.Http;
 
 namespace SlimCAT
 {
-    public class Response
+    public class SlimCatResponse
     {
 
         public string reqUri = "";
@@ -16,7 +16,9 @@ namespace SlimCAT
         public int responseIdForCurrentClient = 0;
         public int clientId = 0;
 
-        public int responseId;
+        public HttpResponseMessage httpResponseMessage; 
+
+        public long responseId;
         public bool exceptionThrown;
         public string responseStatus = "{Response: 'Not Yet Received.'}";
         public string responseStatsCode = "-99"; // 500, 200 404, etc. -99 indicates not yet received.  This text is included in all HTTP responses, like OK=200; 
@@ -26,6 +28,7 @@ namespace SlimCAT
         public string responseExceptionMessage = "";
         public string responseBody = "";
         public DateTime requestTimeSent = new DateTime(1972, 1, 1, 0, 0, 0); //  We will use this to calculate throughput. 
+        public DateTime testCompletionTime = new DateTime(1972, 1, 1, 0, 0, 0); // not stored every response. Is the timestamp of when a script iteration completes
 
     }
 }

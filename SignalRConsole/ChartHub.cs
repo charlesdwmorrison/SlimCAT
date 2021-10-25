@@ -136,10 +136,10 @@ public class Startup
 
     public class ChartHub : Hub
     {
-        public async Task MakeChartsJsChart()
+        public async Task MakeChartJsChart()
         {
-            Console.WriteLine("MakeChartsJsChart() on the Hub has been invoked.");
-            await Clients.All.SendAsync("MakeChartsJsChart");
+            Console.WriteLine("MakeChartJsChart() on the Hub has been invoked.");
+            await Clients.All.SendAsync("MakeChartJsChart");
         }
 
         public async Task AddData(int datasetId, int curDataPointForChartDataSet, double responseTime)
@@ -151,10 +151,10 @@ public class Startup
             await Clients.All.SendAsync("AddData", datasetId, curDataPointForChartDataSet, responseTime);
         }
 
-        public async Task InitializeChartLine(string axisLabel, string rgbaStr, int lineId)
+        public async Task InitializeChartLine(string lineLabel, string rgbaStr, int lineId)
         {
             Console.WriteLine("ChartHub:InitializeChartLine() on the Hub has been started.");
-            await Clients.All.SendAsync("InitializeChartLine", axisLabel, rgbaStr, lineId);
+            await Clients.All.SendAsync("InitializeChartLine", lineLabel, rgbaStr, lineId);
             Console.WriteLine("ChartHub:InitializeChartLine() on the Hub has been completed.");
         }
 
@@ -170,8 +170,7 @@ public class Startup
 public static class Extensions
 {
     public static string GetConfiguration(string configValue)
-    {
-        string targetConfig = "";
+    {       
         string jsonConfigStr = "";
         string execPath = Assembly.GetExecutingAssembly().Location;
         string executionDir = Path.GetDirectoryName(execPath);

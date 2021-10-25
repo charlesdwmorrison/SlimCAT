@@ -26,7 +26,7 @@ namespace SlimCAT
     {
         LogWriter writer = LogWriter.Instance;
 
-        public Dictionary<string, double> CalcualteAllMetrics(ConcurrentDictionary<int, Response> conCurDicReqResponse = null, List<double> responseTimeArray = null, bool useTrim = false)
+        public Dictionary<string, double> CalcualteAllMetrics(ConcurrentDictionary<int, SlimCatResponse> conCurDicReqResponse = null, List<double> responseTimeArray = null, bool useTrim = false)
         {
             Dictionary<string, double> perfMetrics = new Dictionary<string, double>();
 
@@ -70,11 +70,11 @@ namespace SlimCAT
         /// To do: This could be refactored using a base class: https://stackoverflow.com/questions/3361891/alternative-to-a-series-of-overloaded-methods
         /// </param>
         /// <returns></returns>
-        public virtual double ResponseTimeAverage(ConcurrentDictionary<int, Response> conCurDicReqResponse = null, List<double> responseTimeArray = null, bool useTrim = false)
+        public virtual double ResponseTimeAverage(ConcurrentDictionary<int, SlimCatResponse> conCurDicReqResponse = null, List<double> responseTimeArray = null, bool useTrim = false)
         {
             //  use the passed -in parameters if supplied, else create new, blank, versions
             responseTimeArray ??= new List<double>();
-            conCurDicReqResponse ??= new ConcurrentDictionary<int, Response>();
+            conCurDicReqResponse ??= new ConcurrentDictionary<int, SlimCatResponse>();
 
             if (responseTimeArray.Count == 0)
             {
@@ -122,11 +122,11 @@ namespace SlimCAT
 
 
 
-        public virtual double TotalTestDuration(ConcurrentDictionary<int, Response> conCurDicReqResponse = null, List<double> responseTimeArray = null, bool useTrim = false)
+        public virtual double TotalTestDuration(ConcurrentDictionary<int, SlimCatResponse> conCurDicReqResponse = null, List<double> responseTimeArray = null, bool useTrim = false)
         {
             //  use the passed -in parameters if supplied, else create new, blank, versions
             responseTimeArray ??= new List<double>();
-            conCurDicReqResponse ??= new ConcurrentDictionary<int, Response>();
+            conCurDicReqResponse ??= new ConcurrentDictionary<int, SlimCatResponse>();
 
             if (responseTimeArray.Count == 0)
             {
@@ -147,13 +147,13 @@ namespace SlimCAT
         /// </summary>
         /// <param name = "conCurDicReqResponse" ></ param >
         /// < returns ></ returns >
-        public double ResponseTimeMax(ConcurrentDictionary<int, Response> conCurDicReqResponse = null, List<double> responseTimeArray = null, bool useTrim = false)
+        public double ResponseTimeMax(ConcurrentDictionary<int, SlimCatResponse> conCurDicReqResponse = null, List<double> responseTimeArray = null, bool useTrim = false)
         {
             double maxResponseTime = -99;
 
             // use the passed -in parameters if supplied, else create new versions
             responseTimeArray ??= new List<double>();
-            conCurDicReqResponse ??= new ConcurrentDictionary<int, Response>();
+            conCurDicReqResponse ??= new ConcurrentDictionary<int, SlimCatResponse>();
 
             if (responseTimeArray.Count == 0)
             {
@@ -188,7 +188,7 @@ namespace SlimCAT
         /// </summary>
         /// <param name = "reqResponseDic" ></ param >
         /// < returns ></ returns >
-        public double ThroughputAvg(ConcurrentDictionary<int, Response> conCurDicReqResponse)
+        public double ThroughputAvg(ConcurrentDictionary<int, SlimCatResponse> conCurDicReqResponse)
         {
             //writer.WriteToLog("Number of elements in array=" + conCurDicReqResponse.Count.ToString());
 
@@ -235,13 +235,13 @@ namespace SlimCAT
         /// </summary>
         /// <param name = "conCurDicReqResponse" ></ param >
         /// < returns ></ returns >
-        public double ResponseTimeStdDev(List<double> responseTimeArray = null, ConcurrentDictionary<int, Response> conCurDicReqResponse = null)
+        public double ResponseTimeStdDev(List<double> responseTimeArray = null, ConcurrentDictionary<int, SlimCatResponse> conCurDicReqResponse = null)
         {
             double stdDevResponseTime = -99;
 
             // use the passed -in parameters if supplied, else create new versions
             responseTimeArray ??= new List<double>();
-            conCurDicReqResponse ??= new ConcurrentDictionary<int, Response>();
+            conCurDicReqResponse ??= new ConcurrentDictionary<int, SlimCatResponse>();
 
             if (responseTimeArray.Count == 0)
             {
@@ -273,11 +273,11 @@ namespace SlimCAT
         /// <param name = "conCurDicReqResponse" ></ param >
         /// < param name="threshold"></param>
         /// <returns>Boolean</returns>
-        public bool ResponseTimeThresholdViolation(double threshold, List<double> responseTimeArray = null, ConcurrentDictionary<int, Response> conCurDicReqResponse = null)
+        public bool ResponseTimeThresholdViolation(double threshold, List<double> responseTimeArray = null, ConcurrentDictionary<int, SlimCatResponse> conCurDicReqResponse = null)
         {
             // use the passed -in parameters if supplied, else create new versions
             responseTimeArray ??= new List<double>();
-            conCurDicReqResponse ??= new ConcurrentDictionary<int, Response>();
+            conCurDicReqResponse ??= new ConcurrentDictionary<int, SlimCatResponse>();
 
             if (responseTimeArray.Count == 0)
             {
@@ -305,7 +305,7 @@ namespace SlimCAT
         /// <param name = "conCurDicReqResponse" ></ param >
         /// < param name="threshold"></param>
         /// <returns>Boolean</returns>
-        public double ExceptionThrown(ConcurrentDictionary<int, Response> conCurDicReqResponse = null)
+        public double ExceptionThrown(ConcurrentDictionary<int, SlimCatResponse> conCurDicReqResponse = null)
         {
             double exceptionThrown = 0;
             // flag if any request has an exception.
@@ -357,7 +357,7 @@ public virtual double Exceptions_Present(ConcurrentDictionary<int, RequestRespon
         /// This is useful for the Azure DevOps Log
         /// </summary>
         /// <param name = "reqResponseDic" ></ param >
-        public void PrintResponseTimesToConsole(ConcurrentDictionary<int, Response> reqResponseDic)
+        public void PrintResponseTimesToConsole(ConcurrentDictionary<int, SlimCatResponse> reqResponseDic)
         {
             for (int i = 0; i <= reqResponseDic.Count - 1; i++)
             {
@@ -373,7 +373,7 @@ public virtual double Exceptions_Present(ConcurrentDictionary<int, RequestRespon
         /// </summary>
         /// <param name = "conCurDicReqResponse" > Dictionary full of response times. </param>
         //    / <returns>A Collection of doubles representing all the response times in the current responses</returns>
-        public List<double> ConvertDictionaryToArray(ConcurrentDictionary<int, Response> conCurDicReqResponse)
+        public List<double> ConvertDictionaryToArray(ConcurrentDictionary<int, SlimCatResponse> conCurDicReqResponse)
         {
             List<double> dblArrayOfResponseTimes = new List<double>();
             int countOfReceivedResponses = conCurDicReqResponse.Count(x => x.Value.responseTtlb != -99 || x.Value.exceptionThrown != true); //
