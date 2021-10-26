@@ -8,12 +8,13 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - measurement of response time, throughput    
 - SlimCAT can be used in CI/CD pipelines or as ait can also be used as a standalone desktop tool.
 - SlimCAT makes launching multiple threads and writing multiple thread tests as easy as writing any functional, MSTest or NUnit test. 
+
+![SlimCAT SignalR Chart.js](https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT_Gif.gif)
+
 - SlimCAT uses NUnit to assert against response time metrics; pipelines can then make decsions based on this pass/fail result. 
 - SlimCAT has a simple design. If you can write some C# code, you can follow the examples and load test your own applications.
 - SlimCAT follows principles and architecture of well-known load tools, with scripts, correlations, and data sources.
 - Tests can be as short as 10-13 seconds (ideal for pipeline use), or as long as several hours. 
-
-![SlimCAT SignalR Chart.js](https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT_Gif.gif)
 
 ## Features/Components   
 Advancements over vernerable tools such as [Netling](https://github.com/hallatore/Netling) and [K6](https://medium.com/swlh/beginners-guide-to-load-testing-with-k6-ff155885b6db) include:
