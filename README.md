@@ -1,10 +1,14 @@
 # SlimCAT - A DevOps CI/CD Performance Test Tool
 
-- SlimCAT is a C# (.Net 5.0 /.Net Core) load tool developed for use in CI/CD pipelines; it can also be used as a standalone desktop tool.
-- SlimCAT launches multiple threads, but as easily as any functional, MSTest or NUnit test. 
+- SlimCAT is a C# (.Net 5.0 /.Net Core) class library implementing features typically found in load tools:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - launch variying amounts of multiple threads (users) and run them for a specific duration or a specified number of requests.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - correlatate data from one reuqest to another so user "flows" or scenarios can be contructed from multiple requests (such as: logon, do transction, log out).
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - measurement of response time, throughput
+- SlimCAT can be used in CI/CD pipelines or as ait can also be used as a standalone desktop tool.
+- SlimCAT makes launching multiple threads and writing multiple thread tests as easy as writing any functional, MSTest or NUnit test. 
 - SlimCAT uses NUnit to assert against response time metrics; pipelines can then make decsions based on this pass/fail result. 
 - SlimCAT has a simple design. If you can write some C# code, you can follow the examples and load test your own applications.
-- SlimCAT follows principles of well-known load tools, with scripts, correlations, and data sources.
+- SlimCAT follows principles and architecture of well-known load tools, with scripts, correlations, and data sources.
 - Tests can be as short as 10-13 seconds (ideal for pipeline use), or as long as several hours. 
 
 ![SlimCAT SignalR Chart.js](https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT.png?raw=true)
@@ -159,5 +163,7 @@ The SendRequest() class currently consists of a RestSharp client which sends the
 - If you do that, you do not need a GUI. A SignlR GUI is provided for cases when a monitoring tool is not available. 
 
 
-![SlimCAT SignalR Chart.js](https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT.jpg?raw=true)   
+![SlimCAT Logo](https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT.jpg?raw=true)   
 Illustration 112514351 © Martin Malchev | Dreamstime.com
+
+<img src="https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT.jpg?raw=trueg" alt="drawing" width="50" height="50"/>
