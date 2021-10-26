@@ -23,7 +23,6 @@ namespace SlimCAT
             PerfMetrics pvc = new PerfMetrics();
             Dictionary<string, double> perfMetrics = pvc.CalcualteAllMetrics(ResponseDb.conCurResponseDict);
 
-            //Assert.IsTrue(perfMetrics["totalTestDuration"] < 180, "Expected:Test Duration less than 3 minutes");
             Assert.IsTrue(perfMetrics["avgResponseTime"] < 6, "Expected:No request greater than 6 seconds.");
         }
 

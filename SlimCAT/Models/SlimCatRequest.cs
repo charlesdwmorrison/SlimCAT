@@ -8,7 +8,6 @@ namespace SlimCAT
         public string uri;
         public string reqNameForChart = "Unnamed"; // normally, the chart will use the uri as the plot point. But in some cases we need to override the name for Chart.js (e.g., in the case of REST requests with changing data in the uri.)
         public string body;
-        public RestSharp.Method restSharpMethod;
         public System.Net.Http.HttpMethod httpClientMethod;
         public System.Net.Http.HttpRequestMessage httpReqMsg;
         public int requestId = 0;
