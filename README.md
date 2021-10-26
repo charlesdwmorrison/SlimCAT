@@ -2,9 +2,9 @@
 
 <img src="https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT.jpg?raw=true" align="left" alt="drawing" width="250" height="300"/>
 
-- SlimCAT is a C# (.Net 5.0 /.Net Core) class library implementing features typically found in load tools:
+- SlimCAT is a C# (.Net 5.0 /.Net Core) class library implementing features typically found in load tools:   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - launch variying amounts of multiple threads (users) and run them for a specific duration or a specified number of requests.    
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - correlatate data from one reuqest to another so user "flows" or scenarios can be contructed from multiple requests (such as: logon, do transction, log out).    
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - correlatate data from one request to another so user "flows" or scenarios can be contructed from multiple requests (such as: logon, do transction, log out).    
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - measurement of response time, throughput    
 - SlimCAT can be used in CI/CD pipelines or as ait can also be used as a standalone desktop tool.
 - SlimCAT makes launching multiple threads and writing multiple thread tests as easy as writing any functional, MSTest or NUnit test. 
@@ -16,14 +16,14 @@
 ![SlimCAT SignalR Chart.js](https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT.png?raw=true)
 
 ## Features/Components   
-Advancements over vernerable tools such as [Netling](https://github.com/hallatore/Netling) and K6 include:
+Advancements over vernerable tools such as [Netling](https://github.com/hallatore/Netling) and [K6](https://medium.com/swlh/beginners-guide-to-load-testing-with-k6-ff155885b6db) include:
 - .Net 5.0 (.Net Core). SlimCAT can be executed on Linux or a Mac.
 - Correlation so that you can add data and vary the body or URI.
 - Ability to test more than one URL or endpoint per test test. 
 - Test user scenarios,not just one URI; just like LoadRunner or Visual Studio load tests.   
 - User flows ("scripts") composed in familiar C# code, not JavaScript.
 - Use NUnit or MSTest asserts to generate pass/fail results for any URL or for the test as a whole.
-- Ability to ramp up users.
+- Ramp up users gradually, not just "slam testing."    
 - Logging class logs response time, throughput and other metrics to a CSV file.
 - Perf Metrics class calculates response time average, percentiles and throughput.
 - Stay in the Visual Studio IDE to create scripts. 
@@ -33,12 +33,12 @@ Advancements over vernerable tools such as [Netling](https://github.com/hallator
 
 
 SlimCAT takes its name from the old Microsoft [WCAT - Web Capacity Analysis Tool](https://docs.microsoft.com/en-us/previous-versions/ms951774)
-which [Fiddler can still export](http://www.tiernok.com/posts/implementing-wcat-for-load-testing.html), [and also here](https://blogs.iis.net/thomad/using-the-wcat-fiddler-extension-for-web-server-performance-tests)
+which [Fiddler can still export](http://www.tiernok.com/posts/implementing-wcat-for-load-testing.html). See also [here](https://blogs.iis.net/thomad/using-the-wcat-fiddler-extension-for-web-server-performance-tests)
 
 
 ## Usage
 ### Scripts (User Flows)
-Scripts consist of a collections of requests. E.g., 
+Scripts consist of a collection of requests. E.g., 
 
 ```
 List<Req>
@@ -103,8 +103,8 @@ Correlation RegEx Syntax:
 
 ### Users (Threads)
 To create multiple users, a script object is passed to a user controller class, which launches threads (in the form of C# tasks).
-The threads execute the requests defined in the List<Req> collection.
-"AddUsersByRampUp()" takes any collection of requests, creates a new instance of it every X number of seconds, and passes it to a SendRequest() method:
+The threads execute the requests defined in the List<Req> collection.    
+The method "AddUsersByRampUp()" takes any collection of requests, creates a new instance of it every X number of seconds, and passes it to a SendRequest() method:
 
 ```
 public async Task AddUsersByRampUp(Script script = null, int newUserEvery = 2000, int maxUsers = 2, long testDurationSecs = 360)
@@ -148,7 +148,7 @@ public async Task S02_OnlineRest_3_Users()
 
 As you can see from the above, SlimCAT also has a PerfMetrics class which performs calculations on the results and which you can assert against to determine if the test passed or failed.
 
-The SendRequest() class currently consists of a RestSharp client which sends the requests. The class also performs the correlations defined in the script, and starts and stops a timer measuring response time.
+The SendRequest() class currently consists of a static .Net HttpClient which sends the requests. The class also performs the correlations defined in the script, and starts and stops a timer measuring response time.
 
 
 ## Planned Enhancements
@@ -158,14 +158,14 @@ The SendRequest() class currently consists of a RestSharp client which sends the
 - Create scripts programmatically by importing .har files. 
 - Run multiple scripts at the same to create a load scenario.
 - Create a console version in order to execute from the command line. (I'm not 100% sure this is a goal.)
-- Test Agents to use more than one machine (this is a distant goal).
+- Test Agents to use more than one machine (distant goal).
 
 ## Suggestions/FAQ
 - Leverage Application Insights, AppDynamics, Splunk or other monitoring tool to visualize the load test.
-- If you do that, you do not need a GUI. A SignlR GUI is provided for cases when a monitoring tool is not available. 
+- If you do that, you do not need a GUI.     
+- A SignlR GUI is provided for cases when a monitoring tool is not available. 
 
 
-![SlimCAT Logo](<img src="https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT.jpg?raw=true" align="left" alt="drawing" width="250" height="300"/>)   
 Illustration 112514351 © Martin Malchev | Dreamstime.com
 
 
