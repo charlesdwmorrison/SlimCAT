@@ -3,9 +3,9 @@
 <img src="https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT.jpg?raw=true" align="left" alt="drawing" width="250" height="300"/>
 
 - SlimCAT is a C# (.Net 5.0 /.Net Core) class library implementing features typically found in load tools:
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - launch variying amounts of multiple threads (users) and run them for a specific duration or a specified number of requests.
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - correlatate data from one reuqest to another so user "flows" or scenarios can be contructed from multiple requests (such as: logon, do transction, log out).
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - measurement of response time, throughput
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - launch variying amounts of multiple threads (users) and run them for a specific duration or a specified number of requests.    
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - correlatate data from one reuqest to another so user "flows" or scenarios can be contructed from multiple requests (such as: logon, do transction, log out).    
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - measurement of response time, throughput    
 - SlimCAT can be used in CI/CD pipelines or as ait can also be used as a standalone desktop tool.
 - SlimCAT makes launching multiple threads and writing multiple thread tests as easy as writing any functional, MSTest or NUnit test. 
 - SlimCAT uses NUnit to assert against response time metrics; pipelines can then make decsions based on this pass/fail result. 
