@@ -1,5 +1,7 @@
 # SlimCAT - A DevOps CI/CD Performance Test Tool
 
+<img src="https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT.jpg?raw=true" align="left" alt="drawing" width="250" height="300"/>
+
 - SlimCAT is a C# (.Net 5.0 /.Net Core) class library implementing features typically found in load tools:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - launch variying amounts of multiple threads (users) and run them for a specific duration or a specified number of requests.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - correlatate data from one reuqest to another so user "flows" or scenarios can be contructed from multiple requests (such as: logon, do transction, log out).
@@ -163,7 +165,7 @@ The SendRequest() class currently consists of a RestSharp client which sends the
 - If you do that, you do not need a GUI. A SignlR GUI is provided for cases when a monitoring tool is not available. 
 
 
-![SlimCAT Logo](<img src="https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT.jpg?raw=trueg" align="left" alt="drawing" width="250" height="300"/>)   
+![SlimCAT Logo](<img src="https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT.jpg?raw=true" align="left" alt="drawing" width="250" height="300"/>)   
 Illustration 112514351 © Martin Malchev | Dreamstime.com
 
 
