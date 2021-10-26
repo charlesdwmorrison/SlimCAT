@@ -163,7 +163,7 @@ The SendRequest() class currently consists of a RestSharp client which sends the
 - If you do that, you do not need a GUI. A SignlR GUI is provided for cases when a monitoring tool is not available. 
 
 
-![SlimCAT Logo](https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT.jpg?raw=true)   
+![SlimCAT Logo](<img src="https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT.jpg?raw=trueg" align="left" alt="drawing" width="250" height="300"/>)   
 Illustration 112514351 © Martin Malchev | Dreamstime.com
 
-<img src="https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT.jpg?raw=trueg" alt="drawing" width="250" height="300"/>
+
