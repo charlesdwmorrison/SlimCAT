@@ -166,4 +166,4 @@ The SendRequest() class currently consists of a RestSharp client which sends the
 ![SlimCAT Logo](https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT.jpg?raw=true)   
 Illustration 112514351 © Martin Malchev | Dreamstime.com
 
-<img src="https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT.jpg?raw=trueg" alt="drawing" width="50" height="50"/>
+<img src="https://github.com/charlesdwmorrison/SlimCAT/blob/master/SlimCAT.jpg?raw=trueg" alt="drawing" width="50%" height="50%"/>
