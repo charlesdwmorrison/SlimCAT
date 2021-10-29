@@ -1,6 +1,7 @@
 ﻿using SlimCAT.Models;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 
@@ -18,13 +19,14 @@ namespace SlimCAT
         /// <param name="slimCatReq"></param>
         /// <param name="slimCatResponse"></param>
         public void AfterRequestActions(Tuple<Script, SlimCatReq, SlimCatResponse> slimCatResponseInfo)
-        {            
+        {
+
             Script scriptInstance = slimCatResponseInfo.Item1;
             SlimCatReq slimCatReq = slimCatResponseInfo.Item2;
             SlimCatResponse slimCatResponse = slimCatResponseInfo.Item3;
 
             int chartScalingFactor_TestThroughput = Convert.ToInt32(Extensions.GetConfiguration("chartScalingFactor_TestThroughput"));
-            bool logFullReqAndReponse = Convert.ToBoolean(Extensions.GetConfiguration("logFullReqAndReponse")); 
+            bool logFullReqAndReponse = Convert.ToBoolean(Extensions.GetConfiguration("logFullReqAndReponse"));
             if (logFullReqAndReponse == true)
             {
                 var fullResponse = slimCatResponse.httpResponseMessage.Content.ReadAsStringAsync().Result;
@@ -41,6 +43,9 @@ namespace SlimCAT
             {
                 ExtractText(slimCatReq, scriptInstance, slimCatResponse.responseBody);
             }
+
+
+
 
             slimCatResponse.responseExceptionMessage = slimCatResponse.httpResponseMessage.ReasonPhrase;
             slimCatResponse.responseStatsCode = slimCatResponse.httpResponseMessage.StatusCode.ToString();
@@ -64,8 +69,7 @@ namespace SlimCAT
             // calculate response time of request
             double responseTimeInSec = slimCatResponse.responseTtlb / 1000.0;
 
-            TimeSpan duration = DateTime.Now - testStartTime;
-            double reqPerSec = Interlocked.Increment(ref responseIdForLog) / duration.TotalSeconds;
+
 
             // Here is what we need to put a point on a line:
             // 1. Which line does this data belong to? 
@@ -84,6 +88,7 @@ namespace SlimCAT
                 //// test completion timestamp needs to be stored in conCurResponseDict
                 //// we can get the time embeded in the request
                 //// the idea here is to wait until we have a few requests.
+                ;
 
                 //var valuesLst = ResponseDb.conCurResponseDict.Values.Where(x => x.testCompletionTime > testStartTime).ToList();
                 //var completionTimeXIterationsAgo = valuesLst[(int)testCompletions -3].testCompletionTime;
@@ -93,38 +98,46 @@ namespace SlimCAT
 
                 // same as below
                 TimeSpan testDuration = DateTime.Now - testStartTime;
-                testThroughPut = (Interlocked.Read(ref testCompletions) / testDuration.TotalSeconds);
+                testThroughPut = Math.Round(Interlocked.Read(ref testCompletions) / testDuration.TotalSeconds, 2);
 
             }
             else
             {
                 TimeSpan testDuration = DateTime.Now - testStartTime;
-                testThroughPut = (Interlocked.Read(ref testCompletions) / testDuration.TotalSeconds);
+                testThroughPut = Math.Round(Interlocked.Read(ref testCompletions) / testDuration.TotalSeconds, 2);
             }
 
+            // int chartScalingFactor_TestThroughput = 10;
             // add tp to chart only on first request (1 per test iteration).
             if (slimCatReq.uriIdx == scriptInstance.slimCatRequestList.Count - 1)
             {
                 Interlocked.Increment(ref testCompletions);
                 ResponseDb.conCurResponseDict[responseIdForConcurrentDict].testCompletionTime = DateTime.Now;
-                sgnlR.AddData(ChartData.testThroughputIdx, ChartData.countPerUriDict[ChartData.testThroughputIdx], testThroughPut * chartScalingFactor_TestThroughput);
+                sgnlR.AddData(ChartData.testThroughputIdx, ChartData.countPerUriDict[ChartData.testThroughputIdx], Math.Round(testThroughPut * chartScalingFactor_TestThroughput, 2));
                 ChartData.countPerUriDict[ChartData.testThroughputIdx] += 1;
             }
-      
 
-            if (responseIdForLog % 25 == 0 || responseIdForLog == 1)
-            {
-                writer.WriteToLog(" #Resps \tThrdRespId \tThrds \tTTLB \tTest/sec \tRPS \tVerb \tCode \tTransName \t\t\tURI");
-                writer.WriteToLog(" ====== \t========== \t===== \t==== \t======== \t=== \t==== \t==== \t========= \t\t\t===");
-            }
-          
+
+
+
+
             try
             {
+
+                TimeSpan duration = DateTime.Now - testStartTime;
+                double reqPerSec = Math.Round(Interlocked.Increment(ref responseIdForLog) / duration.TotalSeconds, 2);
+
+                if (Interlocked.Read(ref responseIdForLog) % 25 == 0 || Interlocked.Read(ref responseIdForLog) == 1)
+                {
+                    writer.WriteToLog(" #Resps \tThrdRespId \tThrds \tTTLB \tTest/sec \tRPS \tVerb \tCode \tTransName \t\t\tURI");
+                    writer.WriteToLog(" ====== \t========== \t===== \t==== \t======== \t=== \t==== \t==== \t========= \t\t\t===");
+                }
+
                 writer.WriteToLog(" " + responseIdForLog
-                 // + "\t\t" + slimCatReq.taskOrThreadId
+                  // + "\t\t" + slimCatReq.taskOrThreadId
                   + "\t\t" + slimCatResponse.responseIdForCurrentClient
                   // + "\t" + numHttpClients
-                  + "\t\t" + UserController.curNumThreads
+                  + "\t\t" + SlimCAT.UserController.curNumThreads
                   + "\t" + slimCatResponse.responseTtlb
                   + "\t\t" + Math.Round(testThroughPut, 2)
                   + "\t" + Math.Round(reqPerSec, 2)
@@ -132,7 +145,7 @@ namespace SlimCAT
                   + "\t" + slimCatResponse.responseStatsCode
                   + "\t" + slimCatReq.reqNameForChart
                   + "\t\t\t" + slimCatReq.httpReqMsg.RequestUri
-                  // + "\t" + slimCatResponse.responseBody.Substring(0, 100)
+            // + "\t" + slimCatResponse.responseBody.Substring(0, 100)
 
             );
             }
@@ -141,17 +154,22 @@ namespace SlimCAT
                 string theMsge = ex.Message;
             }
 
-            // 10/25/21 -- I think we can delete this. 
-            //if (slimCatReq.extractFromResponseText == true)
-            //{
-          
+            if (slimCatReq.extractText_FromResponseBody == true)
+            {
+                // Regex for correlation is in the script. 
+                // Correlation Hints:
+                // 1. Copy the resultBody into https://rubular.com/
+                // 2. left and right boundary basic format: (?<=  <left str>    )(.*?)(?=  < rt string> )
+                // 3. Use https://onlinestringtools.com/escape-string to escape what you build in Rubular. 
+                // 4. Remember that Visual Studio might display the response with backslashes. However, copying the response
+                //    to notepad or rubular will shows that it does not actually contain back slashes. 
 
-            //    Regex regEx = new Regex(slimCatReq.regExPattern);
-            //    string extractedValue = regEx.Match(slimCatResponse.responseBody).Value;
+                Regex regEx = new Regex(slimCatReq.regExPattern);
+                string extractedValue = regEx.Match(slimCatResponse.responseBody).Value;
 
-            //    // place value into the correlation dictionary
-            //    scriptInstance.correlationsDict[slimCatReq.nameForCorrelatedVariable] = extractedValue;
-            //}
+                // place value into the correlation dictionary
+                scriptInstance.correlationsDict[slimCatReq.nameForCorrelatedVariable] = extractedValue;
+            }
 
         }
 

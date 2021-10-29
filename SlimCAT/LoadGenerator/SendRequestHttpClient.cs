@@ -41,7 +41,7 @@ namespace SlimCAT
     public partial class SendHttpClientRequest
     {
         public static int responseIdForConcurrentDict = -1;
-        public static int responseIdForLog = 0;
+        public static long responseIdForLog = 0;
         private static DateTime testStartTime;
         private SignalRClient sgnlR = new SignalRClient(); // might need to make only one of these, not one per script. Singleton?
         private Stopwatch stopwatch;
