@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SlimCAT
 {
-    public partial class UserController
+    public class UserController
     {
         readonly LogWriter writer = LogWriter.Instance;
 
