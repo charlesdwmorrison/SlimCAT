@@ -5,7 +5,6 @@ namespace SlimCAT
 {
     public class SlimCatResponse
     {
-
         public string reqUri = "";
         public string reqVerb = ""; // GET, POST, PUT, etc. 
         public string reqBody = "";
@@ -21,7 +20,7 @@ namespace SlimCAT
         public long responseId;
         public bool exceptionThrown;
         public string responseStatus = "{Response: 'Not Yet Received.'}";
-        public string responseStatsCode = "-99"; // 500, 200 404, etc. -99 indicates not yet received.  This text is included in all HTTP responses, like OK=200; 
+        public string responseStatusCode = "-99"; // 500, 200 404, etc. -99 indicates not yet received.  This text is included in all HTTP responses, like OK=200; 
         public long responseTtlb = 0;
         public DateTime responseTimeReceived = new DateTime(1972, 1, 1, 0, 0, 0); //  We will use this to calculate throughput. 
         public bool responseExceptionThrown = false;

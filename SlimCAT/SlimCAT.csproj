@@ -5,7 +5,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <Authors>Charles Morrison</Authors>
     <Company>Essential Computing</Company>
-    <Version>1.1.0</Version>
+    <Version>1.1.2</Version>
     <Description>SlimCAT is a C# (.Net 5.0 /.Net Core) class library implementing features typically found in load tools:
       - launch varying amounts of multiple threads (users) and run them for a specific duration or a specified number of requests.
       - correlate data from one request to another so user "flows" or scenarios can be contructed from multiple requests (such as: logon, do transaction, log out).
@@ -16,11 +16,14 @@ SlimCAT makes launching multiple threads and writing multiple thread tests as ea
     <PackageProjectUrl>https://github.com/charlesdwmorrison/SlimCAT</PackageProjectUrl>
     <RepositoryUrl>https://github.com/charlesdwmorrison/SlimCAT</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
-    <PackageTags>Performance, Load, Load Test, Test, chart.js</PackageTags>
+    <PackageTags>Performance, Load, Load Test, Test, chart.js, Threads, Multi-Threaded, Tasks, Stress, Capacity, Capacity Testing, WCAT, Capacity Analysis Tool</PackageTags>
     <PackageReleaseNotes>In this update the REST client has been replaced with HTTPClient; so there is no longer a dependency on RESTSharp. 
 Correlation now actually works.
 appSettings.json has been added to read configurations.
-SlimCatChart.html has been improved. There is now a throughput line, and line colors are not just randomly chosen.</PackageReleaseNotes>
+SlimCatChart.html has been improved. There is now a throughput line, and line colors are not just randomly chosen.
+v 1.1.2 fixes some math rounding errors.</PackageReleaseNotes>
+    <AssemblyVersion>1.1.2.0</AssemblyVersion>
+    <FileVersion>1.1.2.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

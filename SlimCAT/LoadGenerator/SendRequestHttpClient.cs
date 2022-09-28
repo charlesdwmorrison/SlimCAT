@@ -4,8 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text;
+using System.Threading;
 
 
 // Things to do 10/6/21
@@ -69,7 +68,7 @@ namespace SlimCAT
         }
 
 
-        public void SendRequest(Tuple<Script, int, SlimCatReq> slimCatReqInfo)
+        public async void SendRequest(Tuple<Script, int, SlimCatReq> slimCatReqInfo)
         {
             Script scriptInstance = slimCatReqInfo.Item1;
             int taskOrThreadId = slimCatReqInfo.Item2;
@@ -86,7 +85,7 @@ namespace SlimCAT
                 testStartTime = DateTime.Now; 
             }
 
-
+         
             // Debug Request and request headers
             var theRequest = slimCatReq.httpReqMsg.Content.ReadAsStringAsync().Result;
             string stringOfHeaders = "";
@@ -95,7 +94,6 @@ namespace SlimCAT
             {
                 stringOfHeaders = stringOfHeaders + hdr.Key + ":" + hdr.Value.FirstOrDefault() + "\n";
             }
-
 
 
             // Add headers
@@ -117,6 +115,9 @@ namespace SlimCAT
                 }
             }
 
+            //Thread.Sleep(slimCatReq.thinkTimeInMs);
+            Thread.Sleep(3000);
+
             slimCatResponse.requestTimeSent = DateTime.Now;           
             stopwatch.Restart();
 
@@ -125,40 +126,39 @@ namespace SlimCAT
             {
                 if (slimCatReq.httpReqMsg.Method == HttpMethod.Post)
                 {
-                    httpResponseMessage = _httpClient.SendAsync(slimCatReq.httpReqMsg).Result;
+                    httpResponseMessage = await _httpClient.SendAsync(slimCatReq.httpReqMsg).ConfigureAwait(false);
+                    //httpResponseMessage.EnsureSuccessStatusCode(); // do not use. Makes the response null.
                 }
 
                 if (slimCatReq.httpReqMsg.Method == HttpMethod.Get)
                 {
-                    httpResponseMessage = _httpClient.GetAsync(slimCatReq.httpReqMsg.RequestUri).Result;
-                    httpResponseMessage.EnsureSuccessStatusCode();
-                    string resultStr = httpResponseMessage.Content.ReadAsStringAsync().Result;
+                    httpResponseMessage = _httpClient.GetAsync(slimCatReq.httpReqMsg.RequestUri).Result;                    
                 }
 
                 // https://www.c-sharpcorner.com/UploadFile/dacca2/http-request-methods-get-post-put-and-delete/
                 if (slimCatReq.httpReqMsg.Method == HttpMethod.Put)
                 {
-                    //PutAsync(url, new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, MediaTypeJson));
-                    httpResponseMessage = _httpClient.PutAsJsonAsync("api/person", Encoding.UTF8).Result;
-                    httpResponseMessage.EnsureSuccessStatusCode();
-                    string resultStr = httpResponseMessage.Content.ReadAsStringAsync().Result;
+                    httpResponseMessage = _httpClient.PutAsync(slimCatReq.httpReqMsg.RequestUri.ToString(), slimCatReq.httpReqMsg.Content).Result;
                 }
 
                 if (slimCatReq.httpReqMsg.Method == HttpMethod.Delete)
                 {
-                    httpResponseMessage = _httpClient.DeleteAsync(slimCatReq.httpReqMsg.RequestUri).Result;
-                    httpResponseMessage.EnsureSuccessStatusCode();
-                    string resultStr = httpResponseMessage.Content.ReadAsStringAsync().Result;
+                   httpResponseMessage = _httpClient.DeleteAsync(slimCatReq.httpReqMsg.RequestUri).Result;                   
                 }
 
-                slimCatResponse.httpResponseMessage = httpResponseMessage;
+                string resultStr = httpResponseMessage.Content.ReadAsStringAsync().Result;
+                slimCatResponse.httpResponseMessage = httpResponseMessage; 
 
             }
             catch (Exception ex)
             {
+                //ToDo: We need a log and a chart line here about errors.
+                // Do the log first.
+                // E.g., OnlineRestExampple throws "too many requests." 
                 string msg = ex.Message;
                 slimCatResponse.responseExceptionThrown = true;
                 slimCatResponse.responseExceptionMessage = msg;
+                writer.WriteToLog(msg);
             }
             finally
             {

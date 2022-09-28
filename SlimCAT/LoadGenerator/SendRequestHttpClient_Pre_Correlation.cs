@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -25,7 +26,7 @@ namespace SlimCAT
             string extractedValue = regEx.Match(responseBody).Value;
 
             // add or update value in the correlation dictionary
-            scriptInstance.correlationsDict[slimCatReq.nameForCorrelatedVariable] = extractedValue;        
+            scriptInstance.correlationsDict[slimCatReq.correlatedVariableKeyName] = extractedValue;        
 
         }
 
@@ -33,12 +34,16 @@ namespace SlimCAT
         // check if the request needs to use a correlated value.
         // get value from correlations dictionary
         // modify request based on correlated value
+        // ToDo: This could be simplifed for script side: If key is null don't go in here. 
         public SlimCatReq RebuildRequestWithCorrelatedValues(SlimCatReq slimCatReq, Script scriptInstance)
         {
+
             string reqContentStr;
+
+            // Body Correlation - updating the body 
             if (slimCatReq.useExtractedBodyText == true)
             {
-                string keyName = slimCatReq.nameForCorrelatedVariable;
+                string keyName = slimCatReq.correlatedVariableKeyName;
                 reqContentStr = slimCatReq.httpReqMsg.Content.ReadAsStringAsync().Result;
                 
                 reqContentStr = Regex.Replace(reqContentStr, slimCatReq.regExPattern, scriptInstance.correlationsDict[keyName]);
@@ -46,28 +51,36 @@ namespace SlimCAT
 
                 var requestDebug = slimCatReq.httpReqMsg.Content.ReadAsStringAsync().Result;
 
-                var newContent = new StringContent(requestDebug); // stuff altered string back into request
-                newContent.Headers.ContentType = new MediaTypeHeaderValue("text/xml")
+                var newContent = new StringContent(requestDebug); // insert altered string back into request
+
+                // I am not 100% sure we need this. Couldn't it be:
+                // Content = new StringContent("", Encoding.UTF8, "application/json")
+                // also here we are changing the Media type. We should be taking that from the script.
+                // need something to test this on. 
+                newContent.Headers.ContentType = new MediaTypeHeaderValue("application/json")
                 {
                     CharSet = Encoding.UTF8.WebName
                 };
                 slimCatReq.httpReqMsg.Content = newContent;
-
             }
 
-            // URI Extraction (not complete)
+            // URI correlation - updating the key
             if (slimCatReq.useExtractedUriText == true)
-            {
-                //***** to do. !! on the second pass thorugh the script, the value here has been MODIFIED.
-                // so this won't exactly work.
-                // Maybe reusing request is not the best idea . . . 
-                string keyName = slimCatReq.nameForCorrelatedVariable;
-                slimCatReq.uri = slimCatReq.uri.Replace("Correlated Value Not Initialized", scriptInstance.correlationsDict[keyName]);
+            {               
+                string keyName = slimCatReq.correlatedVariableKeyName;
+                string uriStr = slimCatReq.httpReqMsg.RequestUri.ToString();
+                uriStr = uriStr.Replace("Correlated Value Not Initialized", scriptInstance.correlationsDict[keyName]);
+                UriBuilder uriWithCorrelation = new UriBuilder(uriStr);
+                slimCatReq.httpReqMsg.RequestUri = uriWithCorrelation.Uri; 
             }
 
-            return slimCatReq; 
+            // ToDo: Header Correlation
+            if (slimCatReq.useExtractedHeaderText == true)
+            {
 
+            }
+
+                return slimCatReq; 
         }
-
     }
 }

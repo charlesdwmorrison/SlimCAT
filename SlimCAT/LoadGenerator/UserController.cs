@@ -92,7 +92,8 @@ namespace SlimCAT
             // get an instance of the script. Use Activator because it could be a  script of any type. 
             // requestList is built in script constructor
             var theType = script.GetType();          
-            dynamic scriptInstance = Activator.CreateInstance(theType);        
+            dynamic scriptInstance = Activator.CreateInstance(theType);
+            scriptInstance.slimCatRequestList = script.slimCatRequestList;
 
             if (testType == "ByTestIterations")  // ToDo: This needs another condition the count of script iterations. I think another while loop. 
             {
@@ -114,6 +115,5 @@ namespace SlimCAT
                 } while (testStopWatch.ElapsedMilliseconds < testDurationSecs * 1000);// ToDo: The timer here might be redudant. However, in the above method, the timer stops the thread launching. The timer here allows the thread to complete the iteration. 
             }
         }
-
     }
 }

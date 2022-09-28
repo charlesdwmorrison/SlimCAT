@@ -154,6 +154,7 @@ The SendRequest() class currently consists of a static .Net HttpClient which sen
 
 ## Planned Enhancements
 - GUI with a chart to show response time and throughput. This will be done as [Blazor WebAssembly Progressive Web App](https://devblogs.microsoft.com/visualstudio/building-a-progressive-web-app-with-blazor).
+- Build as a kubernetes app.
 - Examples showing how to use a CSV file as data input.
 - Examples of how to assert against a particular URL within a script.
 - Create scripts programmatically by importing .har files. 
@@ -168,5 +169,7 @@ The SendRequest() class currently consists of a static .Net HttpClient which sen
 
 
 Illustration 112514351 © Martin Malchev | Dreamstime.com
+Keywords: Performance, Load, Load Test, Test, chart.js, Threads, Multi-Threaded, Tasks, Stress, Capacity, Capacity Testing, WCAT, Capacity Analysis Tool
+
 
 

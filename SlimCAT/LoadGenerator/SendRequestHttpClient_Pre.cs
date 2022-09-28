@@ -13,11 +13,16 @@ namespace SlimCAT
 
         public void PreRequestActions(Script scriptInstance, SlimCatReq slimCatReq)
         {
-            // even though we create a new scriptInstance, a user iterates over this instance, so we still must overcome "message has alreay been sent" limitation.
-            // clone request in order to get around the HttpRequestMessage "unable to resend" limitation.
-            // This also prevents threads from modifying each other's content.
-            HttpRequestMessage httpReqMsgClone = Clone(slimCatReq.httpReqMsg);
-            slimCatReq.httpReqMsg = httpReqMsgClone;
+            // 09/28/22 - Deprecated, using the reset approach
+            // Even though we create a new scriptInstance, a user iterates over this instance, so we
+            // still must overcome "The request message was already sent" limitation,
+            // which is an HTTPClient limitation on POST requests. 
+            // See: https://stackoverflow.com/questions/54870415/receiving-error-the-request-message-was-already-sent-when-using-polly
+            // https://stackoverflow.com/questions/18000583/re-send-httprequestmessage-exception
+            //HttpRequestMessage httpReqMsgClone = Clone(slimCatReq);
+            //slimCatReq.httpReqMsg = httpReqMsgClone;
+
+             ResetSendStatus(slimCatReq.httpReqMsg);
 
             // position of request in the list of requests.    
             // This is currently used only for charting.
@@ -30,14 +35,7 @@ namespace SlimCAT
 
             // Modifiy request with values we want to correlate
             RebuildRequestWithCorrelatedValues(slimCatReq, scriptInstance);
-
-            // modify request based on correlated value
-            if (slimCatReq.useExtractedUriText == true)
-            {
-                string keyName = slimCatReq.nameForCorrelatedVariable;
-                // ToDo:Fix this like the body correlation. 
-                slimCatReq.uri = slimCatReq.uri.Replace("Correlated Value Not Initialized", scriptInstance.correlationsDict[keyName]);
-            }
+      
 
             SlimCatResponse slimCatResponse = new SlimCatResponse();
             HttpResponseMessage httpResponseMessage = new HttpResponseMessage();
@@ -65,7 +63,7 @@ namespace SlimCAT
             return url.EndsWith("/") ? url : url + "/";
         }
 
-
+        // https://stackoverflow.com/questions/18000583/re-send-httprequestmessage-exception
         private const string SEND_STATUS_FIELD_NAME = "_sendStatus";
         private void ResetSendStatus(HttpRequestMessage request)
         {
@@ -106,6 +104,5 @@ namespace SlimCAT
 
             return httpRequestMessageClone;
         }
-
     }
 }

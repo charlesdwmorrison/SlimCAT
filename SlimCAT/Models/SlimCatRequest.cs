@@ -19,7 +19,7 @@ namespace SlimCAT
         public DateTime reqStartTime;
 
         public Dictionary<string, string> correlations;
-        public string nameForCorrelatedVariable;
+        public string correlatedVariableKeyName;
         public string correlatedValue;
         public bool extractText_FromResponseBody = false;
         public bool useExtractedUriText = false;
@@ -29,6 +29,8 @@ namespace SlimCAT
         public string leftBoundary; // the correlation boundary for the target in the *response*
         public string rightBoundary;
         public string regExPattern;
+
+        public int thinkTimeInMs = 0; 
 
     }
 }

@@ -15,5 +15,4 @@ namespace SlimCAT
         public Dictionary<string, string> header04 = new Dictionary<string, string>();
         public Dictionary<string, string> header05 = new Dictionary<string, string>();
     }
-
 }

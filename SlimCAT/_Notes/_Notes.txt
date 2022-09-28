@@ -129,3 +129,36 @@ HTTPClient HTTPRequestMessage Reuse
         // maybe make the correlation an object?
         // Or it could be a concurrent dictionary
         // If per thread, the dictionary must be passed around with the thread . . . 
+
+
+
+9/24/22
+
+What slimcat is is a wrapper around httpResponsemessage
+
+It wraps timing markers, correlation, logging, the URL /
+
+It is very simple in this respect
+
+
+logging is done via a setting in appSettings.json
+
+
+9/25/22
+Correlation 
+=============
+Troubleshooting Correlation:
+Correlation has two compoents (and depends on a third)
+1. In the POST Request code, we have to grab, using a regex, some data from the response.
+2. In the PRE request code (for the next request), we have to USE the data we grabbed in step 1
+3. We have to be getting a body that is not blank. 
+
+
+
+Some properties are in the http message:
+
+  string uriStr = slimCatReq.httpReqMsg.RequestUri.ToString();
+
+And other properties are in slimCatReq
+
+

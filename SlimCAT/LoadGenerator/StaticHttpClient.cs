@@ -26,8 +26,9 @@ namespace SlimCAT
             _timeout = timeout ?? TimeSpan.FromSeconds(90);
             var debug0 = UserController.numThreads;
 
-            AddCertificates addCerts = new AddCertificates();
-                X509Certificate2Collection x509Cert2coll = addCerts.LoadCertificates();
+            //ToDo: Put back in
+            //AddCertificates addCerts = new AddCertificates();
+            //    X509Certificate2Collection x509Cert2coll = addCerts.LoadCertificates();
 
            var  debug1 = UserController.numThreads;
             _httpClientHandler = new HttpClientHandler
@@ -35,7 +36,7 @@ namespace SlimCAT
                 //AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip
 
             };
-            _httpClientHandler.ClientCertificates.AddRange(x509Cert2coll);
+            //_httpClientHandler.ClientCertificates.AddRange(x509Cert2coll);
 
             _httpClient = new HttpClient(_httpClientHandler, false)
             {

@@ -12,7 +12,7 @@ namespace SlimCAT
 
 
         [Test]
-        public async Task S03_EnsentaSOAP_10_Users_10Iterations()
+        public async Task S04_EnsentaSOAP_10_Users_10Iterations()
         {
             //ToDo: put build request list in contructor of other tests.            
             //S03_Ensenta_Mobile ensentaMobile = new S03_Ensenta_Mobile(); 

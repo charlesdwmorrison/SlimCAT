@@ -56,7 +56,7 @@ namespace SlimCAT.Models
                     // ** regex for 6th segment: https://stackoverflow.com/questions/55579249/how-to-extract-a-specific-url-segment-with-regex-c-sharp
                     // *** the URI template in the above is interesting too. 
                     // Hostname becomes left boundary of the regex
-                    var uri = new Uri(script.slimCatRequestList[i].uri);
+                    var uri = new Uri(script.slimCatRequestList[i].httpReqMsg.RequestUri.ToString());
                     // var path = uri.MakeRelativeUri(uri);
                     var path2 = uri.Segments;
                     var path3 = uri.Host;
@@ -77,7 +77,7 @@ namespace SlimCAT.Models
 
 
                     //setup labels for chart
-                    string fullUri = script.slimCatRequestList[i].uri;
+                    string fullUri = uri.AbsoluteUri;
                     int lastIndexOfBackSlash = fullUri.LastIndexOf('/');
                     int secondLastIndex = lastIndexOfBackSlash > 0 ? fullUri.LastIndexOf('/', lastIndexOfBackSlash - 1) : -1;
                     chartLabelName = fullUri.Substring(secondLastIndex, fullUri.Length - secondLastIndex);
